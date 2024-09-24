@@ -1,9 +1,13 @@
+import axios from "axios";
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
+import { fetchData } from "./pixabay-api";
+
 
 export const loader = document.querySelector(".div-loader");
+export const secondLoader = document.querySelector(".div-loader-2");
 
 export function showErrorMessage(message) {
     iziToast.error({
@@ -14,6 +18,10 @@ export function showErrorMessage(message) {
 
 export function toggleLoader(show) {
 loader.style.visibility = show ? "visible" : "hidden";
+}
+
+export function toggleLoaderSec(show) {
+secondLoader.style.visibility = show ? "visible" : "hidden";
 }
 
 export function renderMarkup({webformatURL, largeImageURL, tags, likes, views, comments, downloads}) {
@@ -35,3 +43,4 @@ export const lightbox = new SimpleLightbox('.gallery a', {
     captionPosition: 'bottom',  
     captionDelay: 250, 
 });
+

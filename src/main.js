@@ -1,10 +1,11 @@
+import axios from "axios";
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-import { BASE_URL, API_KEY, fetchData } from "./js/pixabay-api";
-import { showErrorMessage, loader, toggleLoader, renderMarkup, lightbox } from "./js/render-functions";
+import { BASE_URL, API_KEY, fetchData, limit, totalPages } from "./js/pixabay-api";
+import { showErrorMessage, loader, toggleLoader, renderMarkup, lightbox, secondLoader, toggleLoaderSec } from "./js/render-functions";
 
 document.head.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +14,10 @@ document.head.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="http
 const ul = document.querySelector(".gallery");
 const btn = document.querySelector(".btn");
 const form = document.querySelector(".container");
+const loadBtn = document.querySelector(".load-btn");
+
+let page = 1;
+let currentQuery = "";
 
 function checkForm(event) {
 
@@ -29,18 +34,20 @@ function checkForm(event) {
     toggleLoader(true);
     btn.disabled = true;
   
-    fetchData(searchQuery).then(data => {
+    fetchData(searchQuery, page).then(data => {
 
        if (data.hits.length === 0) {
            showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
            return;
         }
  
-        const images = data.hits;
-        const imagesMarkup = images.map(renderMarkup).join("");
+        const imagesMarkup = data.hits.map(renderMarkup).join("");
         ul.insertAdjacentHTML("beforeend", imagesMarkup);
+        loadBtn.style.display = "flex";
         lightbox.refresh();
         form.reset();
+        page += 1;
+        currentQuery = searchQuery;
         
     })
         .catch(error => {
@@ -53,4 +60,44 @@ function checkForm(event) {
     });
 }
 
+async function clickOnBtn() {
+    const searchQuery = form.elements.query.value.trim();
+      
+    if (searchQuery !== currentQuery) {
+        currentQuery = searchQuery;
+        page = 1;
+        ul.innerHTML = ""; 
+    }
+
+    toggleLoaderSec(true);
+
+    const totalPages = Math.ceil(100 / limit);
+
+     if (page > totalPages) {
+        return iziToast.error({
+            position: "topRight",
+            message: "We're sorry, but you've reached the end of search results."
+        });
+    }
+
+    try {
+        const images = await fetchData(searchQuery, page);
+        page += 1;
+        const imagesMarkup = images.hits.map(renderMarkup).join("");
+        ul.insertAdjacentHTML("beforeend", imagesMarkup);
+        loadBtn.style.display = "flex";
+        lightbox.refresh();
+        page += 1;
+    }
+
+    catch (error) {
+        console.log(error)
+    }
+
+    finally {
+        toggleLoaderSec(false)
+    }
+}
+
 form.addEventListener("submit", checkForm);
+loadBtn.addEventListener("click", clickOnBtn);
