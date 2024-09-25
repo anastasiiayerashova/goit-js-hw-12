@@ -17,15 +17,17 @@ const form = document.querySelector(".container");
 export let loadBtn = document.querySelector(".load-btn");
 
 let page = 1;
-let currentQuery = "";
+export let currentQuery = "";
+let totalHits = 0;
+
 
 function checkForm(event) {
 
     event.preventDefault();
     const form = event.currentTarget;
-    const searchQuery = form.elements.query.value.trim();
+    const currentQuery = form.elements.query.value.trim();
 
-    if ( !searchQuery) {
+    if ( !currentQuery) {
         showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
         return;
     }
@@ -33,8 +35,11 @@ function checkForm(event) {
     ul.innerHTML = "";
     toggleLoader(true);
     btn.disabled = true;
-  
-    fetchData(searchQuery, page).then(data => {
+
+    currentQuery = searchQuery;
+    page = 1;
+
+    fetchData(currentQuery, page).then(data => {
 
        if (data.hits.length === 0) {
            showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
@@ -47,7 +52,7 @@ function checkForm(event) {
         lightbox.refresh();
         form.reset();
         page += 1;
-        currentQuery = searchQuery;
+        
         
     })
         .catch(error => {

@@ -4,11 +4,13 @@ import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import { fetchData, limit } from "./pixabay-api";
-import { loadBtn } from "../main";
+import { loadBtn, currentQuery } from "../main";
 
 let ul = document.querySelector(".gallery");
 let page = 1;
-let currentQuery = "";
+
+export let totalHits = 0;
+
 
 export const loader = document.querySelector(".div-loader");
 export const secondLoader = document.querySelector(".div-loader-2");
@@ -49,14 +51,14 @@ export const lightbox = new SimpleLightbox('.gallery a', {
 });
 
 export async function clickOnBtn() {
-    const form = document.querySelector(".container");
-    const searchQuery = form.elements.query.value.trim();
+   
+    // const form = document.querySelector(".container");
+    // const searchQuery = form.elements.query.value.trim();
       
-    if (searchQuery !== currentQuery) {
-        currentQuery = searchQuery;
-        page = 1;
-        ul.innerHTML = ""; 
-    }
+    // if (searchQuery !== currentQuery) {
+    //     page = 1;
+    //     ul.innerHTML = ""; 
+    // }
 
     toggleLoaderSec(true);
 
@@ -71,19 +73,21 @@ export async function clickOnBtn() {
     }
 
     try {
-        const images = await fetchData(searchQuery, page);
+        const images = await fetchData(currentQuery, page);
         const imagesMarkup = images.hits.map(renderMarkup).join("");
         ul.insertAdjacentHTML("beforeend", imagesMarkup);
-        loadBtn.style.display = "flex";
-        lightbox.refresh();
-        page += 1;
-
+        
         const { height: cardHeight } = document.querySelector(".image img").getBoundingClientRect();
         window.scrollBy({
             top: cardHeight * 2,
             behavior: "smooth"
         });
+
+        loadBtn.style.display = "flex";
+        lightbox.refresh();
+        page += 1;
     }
+    
 
     catch (error) {
         console.log(error)
@@ -93,5 +97,3 @@ export async function clickOnBtn() {
         toggleLoaderSec(false)
     }
 }
-
-

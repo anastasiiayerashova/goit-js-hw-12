@@ -76,6 +76,13 @@ img {
   width: 100%;
   height: 200px;
   object-fit: cover;
+  display: block;
+  transition: transform 250ms ease;
+}
+
+img:hover,
+img:focus {
+  transform: scale(1.01);
 }
 
 .image {
@@ -163,6 +170,11 @@ img {
   border: none;
   height: 40px;
   cursor: pointer;
+}
+
+.load-btn:hover,
+load-btn:focus {
+  background-color: #6c8cff;
 }
 
 .div-loader-2 {
