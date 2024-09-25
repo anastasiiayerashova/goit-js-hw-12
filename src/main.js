@@ -25,9 +25,9 @@ function checkForm(event) {
 
     event.preventDefault();
     const form = event.currentTarget;
-    const currentQuery = form.elements.query.value.trim();
+    const searchQuery = form.elements.query.value.trim();
 
-    if ( !currentQuery) {
+    if ( !searchQuery) {
         showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
         return;
     }
