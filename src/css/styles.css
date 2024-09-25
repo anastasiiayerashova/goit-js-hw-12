@@ -162,6 +162,7 @@ img {
   background-color: #4e75ff;
   border: none;
   height: 40px;
+  cursor: pointer;
 }
 
 .div-loader-2 {

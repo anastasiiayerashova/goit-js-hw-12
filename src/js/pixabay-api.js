@@ -15,6 +15,7 @@ export async function fetchData(searchQuery, page) {
         per_page: limit,
         _page: page
     };
+    
     const urlParams = new URLSearchParams(params);
     const response = await axios.get(`${BASE_URL}?key=${API_KEY}&${urlParams}`);
     return response.data;
