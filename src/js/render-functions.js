@@ -62,7 +62,8 @@ export async function clickOnBtn() {
 
     const totalPages = Math.ceil(100 / limit);
 
-     if (page > totalPages) {
+    if (page > totalPages) {
+        toggleLoaderSec(false);
         return iziToast.error({
             position: "topRight",
             message: "We're sorry, but you've reached the end of search results."
