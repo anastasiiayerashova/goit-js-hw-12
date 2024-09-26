@@ -4,8 +4,8 @@ import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-import { fetchData, totalPages } from "./js/pixabay-api";
-import { showErrorMessage, loader, toggleLoader, renderMarkup, lightbox, secondLoader, toggleLoaderSec } from "./js/render-functions";
+import { fetchData } from "./js/pixabay-api";
+import { showErrorMessage, loader, toggleLoader, renderMarkup, secondLoader, toggleLoaderSec } from "./js/render-functions";
 
 document.head.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,7 @@ const form = document.querySelector(".container");
 export let loadBtn = document.querySelector(".load-btn");
 
 let currentPage = 1;
-export let currentQuery = "";
+let currentQuery = "";
 let totalHits = 0;
 
 
@@ -33,11 +33,8 @@ async function checkForm(event) {
         return;
     }
 
-    
     toggleLoader(true);
     btn.disabled = true;
-
-    
     
     try {
         const data = await fetchData(currentQuery, currentPage);
@@ -47,11 +44,14 @@ async function checkForm(event) {
             showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
             return;
         }
- 
-        const imagesMarkup = data.hits.map(renderMarkup).join("");
-        ul.insertAdjacentHTML("beforeend", imagesMarkup);
-        
-        lightbox.refresh();
+
+        totalHits = data.totalHits;
+        renderMarkup(data, ul);
+       
+        if (ul.children.length < totalHits) {
+            toggleLoaderSec(false)
+        }
+       
         form.reset();
     }
 
@@ -70,20 +70,9 @@ async function clickOnBtn() {
     currentPage += 1;
     toggleLoaderSec(true);
 
-    const totalPages = Math.ceil(100 / 15);
-
-    if (currentPage > totalPages) {
-        toggleLoaderSec(false);
-        return iziToast.error({
-            position: "topRight",
-            message: "We're sorry, but you've reached the end of search results."
-        });
-    }
-
     try {
-        const images = await fetchData(currentQuery, currentPage);
-        const imagesMarkup = images.hits.map(renderMarkup).join("");
-        ul.insertAdjacentHTML("beforeend", imagesMarkup);
+        const data = await fetchData(currentQuery, currentPage);
+        renderMarkup(data, ul);
         
         const { height: cardHeight } = document.querySelector(".image img").getBoundingClientRect();
         window.scrollBy({
@@ -92,11 +81,16 @@ async function clickOnBtn() {
         });
 
         loadBtn.style.display = "flex";
-        lightbox.refresh();
-        
+
+        if (ul.children.length >= totalHits) {
+        toggleLoaderSec(false);
+        return iziToast.error({
+            position: "topRight",
+            message: "We're sorry, but you've reached the end of search results."
+        });
+    }
     }
     
-
     catch (error) {
         console.log(error)
     }

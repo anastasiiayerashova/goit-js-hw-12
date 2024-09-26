@@ -4,7 +4,7 @@ import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import { fetchData } from "./pixabay-api";
-import { loadBtn, currentQuery } from "../main";
+import { loadBtn } from "../main";
 
 let ul = document.querySelector(".gallery");
 
@@ -28,23 +28,30 @@ export function toggleLoaderSec(show) {
 secondLoader.style.visibility = show ? "visible" : "hidden";
 }
 
-export function renderMarkup({webformatURL, largeImageURL, tags, likes, views, comments, downloads}) {
-        return `<li class="image">
-        <a class = "gallery-link" href = "${largeImageURL}">  
-        <img src = "${webformatURL}" alt = "${tags}" class = "image" />
+export function renderMarkup(data, imgGallery) {
+    const markup = data.hits.map(image => `<li class="image">
+        <a class = "gallery-link" href = "${image.largeImageURL}">  
+        <img src = "${image.webformatURL}" alt = "${image.tags}" class = "image" />
         </a>
         <div class = "card-body">   
-          <p class="text">Likes <span class = "value">${likes}</span></p>
-          <p class="text">Views <span class = "value">${views}</span></p>
-          <p class="text">Comments <span class = "value">${comments}</span></p>
-          <p class="text">Downloads <span class = "value">${downloads}</span></p>
+          <p class="text">Likes <span class = "value">${image.likes}</span></p>
+          <p class="text">Views <span class = "value">${image.views}</span></p>
+          <p class="text">Comments <span class = "value">${image.comments}</span></p>
+          <p class="text">Downloads <span class = "value">${image.downloads}</span></p>
           </div>
-        </li>`;
-}
+        </li>`).join("");
     
-export const lightbox = new SimpleLightbox('.gallery a', {
+    imgGallery.insertAdjacentHTML("beforeend", markup);
+
+    let lightbox = new SimpleLightbox('.gallery a', {
     captionsData: 'alt',        
     captionPosition: 'bottom',  
     captionDelay: 250, 
-});
+    });
+    
+    lightbox.refresh();
+    
+}
+    
+
 

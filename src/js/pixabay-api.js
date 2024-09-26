@@ -3,7 +3,7 @@ const BASE_URL = "https://pixabay.com/api/";
 const API_KEY = "46106680-1f6bf9cc8c5ebc2359fb269e0";
 
 
-export let totalPages = Math.ceil(100 / 15);
+
 
 export async function fetchData(query, page=1) {
     const params = {
