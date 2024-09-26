@@ -42,7 +42,7 @@ async function checkForm(event) {
 
         if (data.hits.length === 0) {
             showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
-            оо
+            loadBtn.style.display = "none";
             return;
         }
 
