@@ -34,7 +34,7 @@ async function checkForm(event) {
     }
 
     toggleLoader(true);
-    loadBtn.style.display = "none"
+    loadBtn.style.display = "none";
     btn.disabled = true;
     
     try {
