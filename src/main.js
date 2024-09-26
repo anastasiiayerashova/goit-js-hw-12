@@ -4,8 +4,8 @@ import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-import { BASE_URL, API_KEY, fetchData, limit, totalPages } from "./js/pixabay-api";
-import { showErrorMessage, loader, toggleLoader, renderMarkup, lightbox, secondLoader, toggleLoaderSec, clickOnBtn } from "./js/render-functions";
+import { fetchData, totalPages } from "./js/pixabay-api";
+import { showErrorMessage, loader, toggleLoader, renderMarkup, lightbox, secondLoader, toggleLoaderSec } from "./js/render-functions";
 
 document.head.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,53 +16,94 @@ const btn = document.querySelector(".btn");
 const form = document.querySelector(".container");
 export let loadBtn = document.querySelector(".load-btn");
 
-let page = 1;
+let currentPage = 1;
 export let currentQuery = "";
 let totalHits = 0;
 
 
-function checkForm(event) {
+async function checkForm(event) {
 
     event.preventDefault();
-    const form = event.currentTarget;
-    const searchQuery = form.elements.query.value.trim();
+    ul.innerHTML = "";
+    currentQuery = form.elements.query.value.trim();
+    currentPage = 1;
 
-    if ( !searchQuery) {
+    if ( !currentQuery) {
         showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
         return;
     }
 
-    ul.innerHTML = "";
+    
     toggleLoader(true);
     btn.disabled = true;
 
-    currentQuery = searchQuery;
-    page = 1;
+    
+    
+    try {
+        const data = await fetchData(currentQuery, currentPage);
+        loadBtn.style.display = "flex";
 
-    fetchData(currentQuery, page).then(data => {
-
-       if (data.hits.length === 0) {
-           showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
-           return;
+        if (data.hits.length === 0) {
+            showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
+            return;
         }
  
         const imagesMarkup = data.hits.map(renderMarkup).join("");
         ul.insertAdjacentHTML("beforeend", imagesMarkup);
-        loadBtn.style.display = "flex";
+        
         lightbox.refresh();
         form.reset();
-        page += 1;
-        
-        
-    })
-        .catch(error => {
+    }
+
+    catch (error) {
         showErrorMessage(error.message);
-        })
+    }
         
-        .finally(() => {
+    finally {
         toggleLoader(false)
         btn.disabled = false;
-    });
+    };
+}
+
+async function clickOnBtn() {
+
+    currentPage += 1;
+    toggleLoaderSec(true);
+
+    const totalPages = Math.ceil(100 / 15);
+
+    if (currentPage > totalPages) {
+        toggleLoaderSec(false);
+        return iziToast.error({
+            position: "topRight",
+            message: "We're sorry, but you've reached the end of search results."
+        });
+    }
+
+    try {
+        const images = await fetchData(currentQuery, currentPage);
+        const imagesMarkup = images.hits.map(renderMarkup).join("");
+        ul.insertAdjacentHTML("beforeend", imagesMarkup);
+        
+        const { height: cardHeight } = document.querySelector(".image img").getBoundingClientRect();
+        window.scrollBy({
+            top: cardHeight * 2,
+            behavior: "smooth"
+        });
+
+        loadBtn.style.display = "flex";
+        lightbox.refresh();
+        
+    }
+    
+
+    catch (error) {
+        console.log(error)
+    }
+
+    finally {
+        toggleLoaderSec(false)
+    }
 }
 
 form.addEventListener("submit", checkForm);

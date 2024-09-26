@@ -3,13 +3,11 @@ import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
-import { fetchData, limit } from "./pixabay-api";
+import { fetchData } from "./pixabay-api";
 import { loadBtn, currentQuery } from "../main";
 
 let ul = document.querySelector(".gallery");
-let page = 1;
 
-export let totalHits = 0;
 
 
 export const loader = document.querySelector(".div-loader");
@@ -50,50 +48,3 @@ export const lightbox = new SimpleLightbox('.gallery a', {
     captionDelay: 250, 
 });
 
-export async function clickOnBtn() {
-   
-    // const form = document.querySelector(".container");
-    // const searchQuery = form.elements.query.value.trim();
-      
-    // if (searchQuery !== currentQuery) {
-    //     page = 1;
-    //     ul.innerHTML = ""; 
-    // }
-
-    toggleLoaderSec(true);
-
-    const totalPages = Math.ceil(100 / limit);
-
-    if (page > totalPages) {
-        toggleLoaderSec(false);
-        return iziToast.error({
-            position: "topRight",
-            message: "We're sorry, but you've reached the end of search results."
-        });
-    }
-
-    try {
-        const images = await fetchData(currentQuery, page);
-        const imagesMarkup = images.hits.map(renderMarkup).join("");
-        ul.insertAdjacentHTML("beforeend", imagesMarkup);
-        
-        const { height: cardHeight } = document.querySelector(".image img").getBoundingClientRect();
-        window.scrollBy({
-            top: cardHeight * 2,
-            behavior: "smooth"
-        });
-
-        loadBtn.style.display = "flex";
-        lightbox.refresh();
-        page += 1;
-    }
-    
-
-    catch (error) {
-        console.log(error)
-    }
-
-    finally {
-        toggleLoaderSec(false)
-    }
-}

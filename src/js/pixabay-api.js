@@ -1,19 +1,18 @@
 import axios from "axios";
-export const BASE_URL = "https://pixabay.com/api/";
-export const API_KEY = "46106680-1f6bf9cc8c5ebc2359fb269e0";
+const BASE_URL = "https://pixabay.com/api/";
+const API_KEY = "46106680-1f6bf9cc8c5ebc2359fb269e0";
 
-export let limit = 15;
-export let page = 1;
-export let totalPages = Math.ceil(100 / limit);
 
-export async function fetchData(searchQuery, page) {
+export let totalPages = Math.ceil(100 / 15);
+
+export async function fetchData(query, page=1) {
     const params = {
-        q: searchQuery,
+        q: query,
         image_type: "photo",
         orientation: "horizontal",
         safesearch: "true",
-        per_page: limit,
-        _page: page
+        per_page: 15,
+        page,
     };
     
     const urlParams = new URLSearchParams(params);
