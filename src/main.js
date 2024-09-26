@@ -11,15 +11,14 @@ document.head.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="http
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital@0;1&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;1,500&display=swap" rel="stylesheet">`)
 
-export let ul = document.querySelector(".gallery");
+let ul = document.querySelector(".gallery");
 const btn = document.querySelector(".btn");
 const form = document.querySelector(".container");
-export let loadBtn = document.querySelector(".load-btn");
+let loadBtn = document.querySelector(".load-btn");
 
 let currentPage = 1;
 let currentQuery = "";
 let totalHits = 0;
-
 
 async function checkForm(event) {
 

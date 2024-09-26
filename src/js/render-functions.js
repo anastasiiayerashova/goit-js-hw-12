@@ -4,7 +4,6 @@ import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import { fetchData } from "./pixabay-api";
-import { loadBtn } from "../main";
 
 let ul = document.querySelector(".gallery");
 
