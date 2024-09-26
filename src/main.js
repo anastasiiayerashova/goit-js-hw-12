@@ -30,6 +30,7 @@ async function checkForm(event) {
 
     if ( !currentQuery) {
         showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
+        loadBtn.style.display = "none";
         return;
     }
 
