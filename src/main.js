@@ -34,6 +34,7 @@ async function checkForm(event) {
     }
 
     toggleLoader(true);
+    loadBtn.style.display = "none"
     btn.disabled = true;
     
     try {
@@ -82,8 +83,9 @@ async function clickOnBtn() {
         });
 
         if (ul.children.length >= totalHits) {
-        toggleLoaderSec(false);
-        return iziToast.error({
+            toggleLoaderSec(false);
+            loadBtn.style.display = "none";
+            return iziToast.error({
             position: "topRight",
             message: "We're sorry, but you've reached the end of search results."
         });
