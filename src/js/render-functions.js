@@ -8,8 +8,6 @@ import { loadBtn } from "../main";
 
 let ul = document.querySelector(".gallery");
 
-
-
 export const loader = document.querySelector(".div-loader");
 export const secondLoader = document.querySelector(".div-loader-2");
 
@@ -52,6 +50,3 @@ export function renderMarkup(data, imgGallery) {
     lightbox.refresh();
     
 }
-    
-
-
