@@ -80,8 +80,6 @@ async function clickOnBtn() {
             behavior: "smooth"
         });
 
-        // loadBtn.style.display = "flex";
-
         if (ul.children.length >= totalHits) {
         toggleLoaderSec(false);
         return iziToast.error({
