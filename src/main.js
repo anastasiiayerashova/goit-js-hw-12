@@ -93,6 +93,7 @@ async function clickOnBtn() {
         if (currentPage >= totalPages) {
             toggleLoaderSec(false);
             loadBtn.style.display = "none";
+            
             return iziToast.error({
             position: "topRight",
             message: "We're sorry, but you've reached the end of search results."
