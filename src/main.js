@@ -24,26 +24,24 @@ async function checkForm(event) {
 
     event.preventDefault();
     ul.innerHTML = "";
+    loadBtn.classList.add("visually-hidden");
     currentQuery = form.elements.query.value.trim();
     currentPage = 1;
-
+    toggleLoader(true);
+   
     if ( !currentQuery) {
         showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
-        loadBtn.style.display = "none";
+        toggleLoader(false);
         return;
     }
-
-    toggleLoader(true);
-    loadBtn.style.display = "none";
+    
     btn.disabled = true;
     
     try {
         const data = await fetchData(currentQuery, currentPage);
-        loadBtn.style.display = "flex";
 
         if (data.hits.length === 0) {
             showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
-            loadBtn.style.display = "none";
             return;
         }
 
@@ -53,11 +51,11 @@ async function checkForm(event) {
         const totalPages = Math.ceil(totalHits / data.hits.length);
        
         if (currentPage < totalPages) {
-            loadBtn.style.display = "flex";
+             loadBtn.classList.remove("visually-hidden");
         }
 
         else {
-             loadBtn.style.display = "none";
+             loadBtn.classList.add("visually-hidden");
         }
        
         form.reset();
@@ -92,7 +90,7 @@ async function clickOnBtn() {
 
         if (currentPage >= totalPages) {
             toggleLoaderSec(false);
-            loadBtn.style.display = "none";
+             loadBtn.classList.add(".visually-hidden");
             
             return iziToast.error({
             position: "topRight",

@@ -140,7 +140,7 @@ img:focus {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border-bottom: 4px solid #ff3d00;
+  border-bottom: 4px solid #4e75ff;
   border-left: 4px solid transparent;
 }
 
@@ -154,7 +154,7 @@ img:focus {
 }
 
 .load-btn {
-  display: none;
+  display: block;
   margin: 0 auto;
   font-weight: 500;
   font-size: 16px;
@@ -204,7 +204,7 @@ load-btn:focus {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border-bottom: 4px solid #ff3d00;
+  border-bottom: 4px solid #4e75ff;
   border-left: 4px solid transparent;
 }
 
@@ -215,4 +215,15 @@ load-btn:focus {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
