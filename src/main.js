@@ -5,7 +5,7 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 import { fetchData } from "./js/pixabay-api";
-import { showErrorMessage, loader, toggleLoader, renderMarkup, secondLoader, toggleLoaderSec } from "./js/render-functions";
+import { showErrorMessage, toggleLoader, renderMarkup, toggleLoaderSec } from "./js/render-functions";
 
 document.head.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,9 +49,15 @@ async function checkForm(event) {
 
         totalHits = data.totalHits;
         renderMarkup(data, ul);
+
+        const totalPages = Math.ceil(totalHits / data.hits.length);
        
-        if (ul.children.length < totalHits) {
-            toggleLoaderSec(false)
+        if (currentPage < totalPages) {
+            loadBtn.style.display = "flex";
+        }
+
+        else {
+             loadBtn.style.display = "none";
         }
        
         form.reset();
@@ -82,7 +88,9 @@ async function clickOnBtn() {
             behavior: "smooth"
         });
 
-        if (ul.children.length >= totalHits) {
+        const totalPages = Math.ceil(data.totalHits / data.hits.length);
+
+        if (currentPage >= totalPages) {
             toggleLoaderSec(false);
             loadBtn.style.display = "none";
             return iziToast.error({

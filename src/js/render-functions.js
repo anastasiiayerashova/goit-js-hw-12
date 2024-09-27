@@ -7,8 +7,8 @@ import { fetchData } from "./pixabay-api";
 
 let ul = document.querySelector(".gallery");
 
-export const loader = document.querySelector(".div-loader");
-export const secondLoader = document.querySelector(".div-loader-2");
+const loader = document.querySelector(".div-loader");
+const secondLoader = document.querySelector(".div-loader-2");
 
 export function showErrorMessage(message) {
     iziToast.error({
@@ -47,5 +47,4 @@ export function renderMarkup(data, imgGallery) {
     });
     
     lightbox.refresh();
-    
 }
