@@ -5,7 +5,7 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 import { fetchData } from "./js/pixabay-api";
-import { showErrorMessage, toggleLoader, renderMarkup, toggleLoaderSec } from "./js/render-functions";
+import { showErrorMessage, toggleLoader, renderMarkup } from "./js/render-functions";
 
 document.head.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,11 +27,11 @@ async function checkForm(event) {
     loadBtn.classList.add("visually-hidden");
     currentQuery = form.elements.query.value.trim();
     currentPage = 1;
-    toggleLoader(true);
+    toggleLoader(false, 0);
    
     if ( !currentQuery) {
         showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
-        toggleLoader(false);
+        toggleLoader(true, 0);
         return;
     }
     
@@ -39,7 +39,7 @@ async function checkForm(event) {
     
     try {
         const data = await fetchData(currentQuery, currentPage);
-
+        toggleLoader(false, 0);
         if (data.hits.length === 0) {
             showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
             return;
@@ -51,6 +51,7 @@ async function checkForm(event) {
         const totalPages = Math.ceil(totalHits / data.hits.length);
        
         if (currentPage < totalPages) {
+            toggleLoader(false, 0);
              loadBtn.classList.remove("visually-hidden");
         }
 
@@ -66,7 +67,7 @@ async function checkForm(event) {
     }
         
     finally {
-        toggleLoader(false)
+        toggleLoader(true, 0)
         btn.disabled = false;
     };
 }
@@ -74,10 +75,12 @@ async function checkForm(event) {
 async function clickOnBtn() {
 
     currentPage += 1;
-    toggleLoaderSec(true);
+    toggleLoader(true, 1);
 
     try {
         const data = await fetchData(currentQuery, currentPage);
+
+        toggleLoader(false, 1);
         renderMarkup(data, ul);
         
         const { height: cardHeight } = document.querySelector(".image img").getBoundingClientRect();
@@ -89,8 +92,8 @@ async function clickOnBtn() {
         const totalPages = Math.ceil(data.totalHits / data.hits.length);
 
         if (currentPage >= totalPages) {
-            toggleLoaderSec(false);
-             loadBtn.classList.add(".visually-hidden");
+            toggleLoader(true, 1);
+             loadBtn.classList.add("visually-hidden");
             
             return iziToast.error({
             position: "topRight",
@@ -104,7 +107,7 @@ async function clickOnBtn() {
     }
 
     finally {
-        toggleLoaderSec(false)
+        toggleLoader(true, 1)
     }
 }
 

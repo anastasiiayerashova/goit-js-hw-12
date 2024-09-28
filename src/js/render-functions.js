@@ -7,9 +7,6 @@ import { fetchData } from "./pixabay-api";
 
 let ul = document.querySelector(".gallery");
 
-const loader = document.querySelector(".div-loader");
-const secondLoader = document.querySelector(".div-loader-2");
-
 export function showErrorMessage(message) {
     iziToast.error({
         title: 'Error',
@@ -17,12 +14,17 @@ export function showErrorMessage(message) {
     });
 }
 
-export function toggleLoader(show) {
-loader.style.visibility = show ? "visible" : "hidden";
-}
-
-export function toggleLoaderSec(show) {
-secondLoader.style.visibility = show ? "visible" : "hidden";
+export function toggleLoader(isHidden, index = null) {
+    const loaders = document.querySelectorAll(".loader");
+    console.log('Toggling loader at index:', index);
+    if (index !== null) {
+        loaders[index]?.classList.toggle('visually-hidden', isHidden);
+    }
+    else {
+        loaders.forEach(loader => {
+            loader.classList.toggle('visually-hidden', isHidden);
+        });
+    }
 }
 
 export function renderMarkup(data, imgGallery) {
