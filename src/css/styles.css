@@ -157,6 +157,7 @@ img:focus {
 .load-btn {
   display: block;
   margin: 0 auto;
+  margin-bottom: 40px;
   font-weight: 500;
   font-size: 16px;
   line-height: 150%;
