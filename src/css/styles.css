@@ -125,7 +125,7 @@ img:focus {
   height: 48px;
   border-radius: 50%;
   margin: 20px auto;
-  display: block;
+  display: none;
   border-top: 4px solid #fff;
   border-right: 4px solid transparent;
   box-sizing: border-box;
@@ -157,7 +157,6 @@ img:focus {
 .load-btn {
   display: block;
   margin: 0 auto;
-  margin-bottom: 40px;
   font-weight: 500;
   font-size: 16px;
   line-height: 150%;
@@ -179,46 +178,6 @@ load-btn:focus {
   background-color: #6c8cff;
 }
 
-.div-loader-2 {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-  visibility: hidden;
-}
-
-.loader-2 {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: inline-block;
-  border-top: 4px solid #fff;
-  border-right: 4px solid transparent;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-}
-
-.loader-2::after {
-  content: '';
-  box-sizing: border-box;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border-bottom: 4px solid #4e75ff;
-  border-left: 4px solid transparent;
-}
-
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -228,4 +187,10 @@ load-btn:focus {
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+}
+.cont {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
 }

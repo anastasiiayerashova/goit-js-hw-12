@@ -7,6 +7,7 @@ import { fetchData } from "./pixabay-api";
 
 let ul = document.querySelector(".gallery");
 
+
 export function showErrorMessage(message) {
     iziToast.error({
         title: 'Error',
@@ -14,17 +15,9 @@ export function showErrorMessage(message) {
     });
 }
 
-export function toggleLoader(isHidden, index = null) {
-    const loaders = document.querySelectorAll(".loader");
-    console.log('Toggling loader at index:', index);
-    if (index !== null) {
-        loaders[index]?.classList.toggle('visually-hidden', isHidden);
-    }
-    else {
-        loaders.forEach(loader => {
-            loader.classList.toggle('visually-hidden', isHidden);
-        });
-    }
+export function toggleLoader(show) {
+    const loader = document.querySelector(".loader");
+loader.style.display = show ? "block" : "none";
 }
 
 export function renderMarkup(data, imgGallery) {

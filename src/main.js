@@ -27,19 +27,19 @@ async function checkForm(event) {
     loadBtn.classList.add("visually-hidden");
     currentQuery = form.elements.query.value.trim();
     currentPage = 1;
-    toggleLoader(false, 0);
    
-    if ( !currentQuery) {
+    if (!currentQuery) {
+        toggleLoader(false);
         showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
-        toggleLoader(true, 0);
         return;
     }
     
     btn.disabled = true;
+    toggleLoader(true);
     
     try {
         const data = await fetchData(currentQuery, currentPage);
-        toggleLoader(false, 0);
+        toggleLoader(false);
         if (data.hits.length === 0) {
             showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
             return;
@@ -51,7 +51,7 @@ async function checkForm(event) {
         const totalPages = Math.ceil(totalHits / data.hits.length);
        
         if (currentPage < totalPages) {
-            toggleLoader(false, 0);
+            toggleLoader(true);
              loadBtn.classList.remove("visually-hidden");
         }
 
@@ -67,7 +67,7 @@ async function checkForm(event) {
     }
         
     finally {
-        toggleLoader(true, 0)
+        toggleLoader(false)
         btn.disabled = false;
     };
 }
@@ -75,12 +75,12 @@ async function checkForm(event) {
 async function clickOnBtn() {
 
     currentPage += 1;
-    toggleLoader(true, 1);
+    toggleLoader(true);
 
     try {
         const data = await fetchData(currentQuery, currentPage);
 
-        toggleLoader(false, 1);
+        toggleLoader(false);
         renderMarkup(data, ul);
         
         const { height: cardHeight } = document.querySelector(".image img").getBoundingClientRect();
@@ -92,7 +92,7 @@ async function clickOnBtn() {
         const totalPages = Math.ceil(data.totalHits / data.hits.length);
 
         if (currentPage >= totalPages) {
-            toggleLoader(true, 1);
+            toggleLoader(false);
              loadBtn.classList.add("visually-hidden");
             
             return iziToast.error({
@@ -107,7 +107,7 @@ async function clickOnBtn() {
     }
 
     finally {
-        toggleLoader(true, 1)
+        toggleLoader(false)
     }
 }
 
