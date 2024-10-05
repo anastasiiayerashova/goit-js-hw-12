@@ -44,13 +44,14 @@ async function checkForm(event) {
             showErrorMessage('Sorry, there are no images matching your search query. Please try again!');
             return;
         }
+        else {
+            totalHits = data.totalHits;
+            renderMarkup(data, ul);
+        }
 
-        totalHits = data.totalHits;
-        renderMarkup(data, ul);
-
-        const totalPages = Math.ceil(totalHits / data.hits.length);
        
-        if (currentPage < totalPages) {
+       
+        if (ul.children.length < totalHits) {
             toggleLoader(true);
              loadBtn.classList.remove("visually-hidden");
         }
@@ -64,6 +65,7 @@ async function checkForm(event) {
 
     catch (error) {
         showErrorMessage(error.message);
+        toggleLoader(false)
     }
         
     finally {
@@ -86,12 +88,10 @@ async function clickOnBtn() {
         const { height: cardHeight } = document.querySelector(".image img").getBoundingClientRect();
         window.scrollBy({
             top: cardHeight * 2,
-            behavior: "smooth"
+            behavior: "smooth",
         });
 
-        const totalPages = Math.ceil(data.totalHits / data.hits.length);
-
-        if (currentPage >= totalPages) {
+        if (ul.children.length >= totalHits) {
             toggleLoader(false);
              loadBtn.classList.add("visually-hidden");
             
@@ -103,7 +103,8 @@ async function clickOnBtn() {
     }
     
     catch (error) {
-        console.log(error)
+        console.log(error);
+        toggleLoader(false);
     }
 
     finally {
